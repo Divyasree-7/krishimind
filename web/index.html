@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KrishiMind — Your Farm Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.1.0/tabler-icons.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-icon"><i class="ti ti-plant-2"></i></div>
+      KrishiMind
+    </div>
+    <div class="nav-links">
+      <div class="nav-link" data-page="home">Dashboard</div>
+      <div class="nav-link" data-page="chat">Chat</div>
+      <div class="nav-link" data-page="about">How it works</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ DASHBOARD (HOME) PAGE ============ -->
+<section class="page" id="page-home">
+  <div class="dash-wrap">
+
+    <div class="dash-topbar">
+      <div class="dash-greeting">
+        <h1>Namaste, farmer 🌾</h1>
+        <p>Here's what's happening on your farm today</p>
+      </div>
+      <div class="dash-context-bar">
+        <select id="dash-state">
+          <option>Maharashtra</option><option>Punjab</option><option>Haryana</option>
+          <option>Uttar Pradesh</option><option>Madhya Pradesh</option><option>Karnataka</option>
+          <option>Gujarat</option><option>Rajasthan</option><option>Andhra Pradesh</option>
+          <option>Bihar</option><option>West Bengal</option>
+        </select>
+        <select id="dash-soil">
+          <option value="loamy">Loamy</option><option value="black soil">Black soil</option>
+          <option value="alluvial">Alluvial</option><option value="sandy loam">Sandy loam</option>
+          <option value="clay loam">Clay loam</option><option value="red loamy">Red loamy</option>
+        </select>
+        <select id="dash-season">
+          <option value="kharif">Kharif</option><option value="rabi">Rabi</option><option value="zaid">Zaid</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="quick-actions-grid" style="margin-bottom: 1.1rem;">
+      <div class="quick-action-card" onclick="quickAsk('Will it rain this week? Should I irrigate?')">
+        <div class="qa-icon"><i class="ti ti-cloud-rain"></i></div>
+        <div class="qa-label">Check rain risk</div>
+      </div>
+      <div class="quick-action-card" onclick="quickAsk('Which crop should I grow this season?')">
+        <div class="qa-icon"><i class="ti ti-seeding"></i></div>
+        <div class="qa-label">Best crop to grow</div>
+      </div>
+      <div class="quick-action-card" onclick="quickAsk('Should I sell my produce now or wait?')">
+        <div class="qa-icon"><i class="ti ti-chart-line"></i></div>
+        <div class="qa-label">When to sell</div>
+      </div>
+      <div class="quick-action-card" onclick="quickAsk('What pests should I watch for right now?')">
+        <div class="qa-icon"><i class="ti ti-bug"></i></div>
+        <div class="qa-label">Pest risk check</div>
+      </div>
+    </div>
+
+    <!-- Weather + Pest -->
+    <div class="dash-grid">
+      <div class="widget-card">
+        <div class="widget-header">
+          <div class="widget-title"><i class="ti ti-cloud-rain"></i> Weather forecast</div>
+          <div class="widget-action" onclick="loadWeatherWidget()"><i class="ti ti-refresh"></i></div>
+        </div>
+        <div id="weather-widget"></div>
+      </div>
+      <div class="widget-card">
+        <div class="widget-header">
+          <div class="widget-title"><i class="ti ti-bug"></i> Pest & disease alerts</div>
+          <div class="widget-action" onclick="loadPestWidget()"><i class="ti ti-refresh"></i></div>
+        </div>
+        <div id="pest-widget"></div>
+      </div>
+    </div>
+
+    <!-- Market + Calendar -->
+    <div class="dash-grid-2">
+      <div class="widget-card">
+        <div class="widget-header">
+          <div class="widget-title"><i class="ti ti-chart-line"></i> Market prices</div>
+          <div class="widget-action" onclick="loadMarketWidget()"><i class="ti ti-refresh"></i></div>
+        </div>
+        <div id="market-widget"></div>
+      </div>
+      <div class="widget-card">
+        <div class="widget-header">
+          <div class="widget-title"><i class="ti ti-calendar"></i> Crop calendar</div>
+          <div class="widget-action" onclick="loadCropCalendarWidget()"><i class="ti ti-refresh"></i></div>
+        </div>
+        <div id="calendar-widget"></div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="widget-card">
+      <div class="widget-header">
+        <div class="widget-title"><i class="ti ti-history"></i> Recent questions</div>
+        <div class="widget-action" onclick="clearHistory()"><i class="ti ti-trash"></i> Clear</div>
+      </div>
+      <div id="history-widget"></div>
+    </div>
+
+    <div class="footer-note">KrishiMind — Kaggle 5-Day Agentic AI Capstone · Agents for Good</div>
+  </div>
+</section>
+
+<!-- ============ CHAT PAGE ============ -->
+<section class="page" id="page-chat">
+  <div class="chat-page-wrap">
+    <div class="chat-layout">
+      <div>
+        <div class="side-panel">
+          <h3><i class="ti ti-map-pin"></i> Your farm context</h3>
+          <div class="field">
+            <label for="state">State</label>
+            <select id="state">
+              <option>Maharashtra</option><option>Punjab</option><option>Haryana</option>
+              <option>Uttar Pradesh</option><option>Madhya Pradesh</option><option>Karnataka</option>
+              <option>Gujarat</option><option>Rajasthan</option><option>Andhra Pradesh</option>
+              <option>Bihar</option><option>West Bengal</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="soil">Soil type</label>
+            <select id="soil">
+              <option value="loamy">Loamy</option><option value="black soil">Black soil</option>
+              <option value="alluvial">Alluvial</option><option value="sandy loam">Sandy loam</option>
+              <option value="clay loam">Clay loam</option><option value="red loamy">Red loamy</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="season">Season</label>
+            <select id="season">
+              <option value="kharif">Kharif</option><option value="rabi">Rabi</option><option value="zaid">Zaid</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="crop">Crop (optional)</label>
+            <input type="text" id="crop" placeholder="wheat, onion...">
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <h3><i class="ti ti-language"></i> Response language</h3>
+          <div class="lang-grid" id="lang-grid">
+            <button class="lang-btn active" data-lang="auto">Auto</button>
+            <button class="lang-btn" data-lang="english">English</button>
+            <button class="lang-btn" data-lang="hindi">हिन्दी</button>
+            <button class="lang-btn" data-lang="marathi">मराठी</button>
+            <button class="lang-btn" data-lang="punjabi">ਪੰਜਾਬੀ</button>
+            <button class="lang-btn" data-lang="telugu">తెలుగు</button>
+          </div>
+        </div>
+
+        <div class="side-panel">
+          <h3><i class="ti ti-robot"></i> Agent activity</h3>
+          <div class="agent-status-list" id="agent-status-list">
+            <div class="agent-status" data-agent="weather"><span class="dot-status"></span><i class="ti ti-cloud-rain"></i> Weather & Climate</div>
+            <div class="agent-status" data-agent="crop"><span class="dot-status"></span><i class="ti ti-seeding"></i> Crop Advisory</div>
+            <div class="agent-status" data-agent="market"><span class="dot-status"></span><i class="ti ti-chart-line"></i> Market Price</div>
+            <div class="agent-status" data-agent="pest"><span class="dot-status"></span><i class="ti ti-bug"></i> Pest & Disease</div>
+          </div>
+        </div>
+
+        <div class="side-panel examples">
+          <h3><i class="ti ti-bulb"></i> Try asking</h3>
+          <button class="example-btn" data-q="Will it rain this week? Should I irrigate?"><i class="ti ti-cloud-rain"></i> Will it rain this week?</button>
+          <button class="example-btn" data-q="Which crop should I grow this season?"><i class="ti ti-seeding"></i> Which crop gives best price?</button>
+          <button class="example-btn" data-q="My tomato leaves have white spots, what is this?"><i class="ti ti-bug"></i> Tomato leaves have white spots</button>
+          <button class="example-btn" data-q="Should I sell my wheat now or wait?"><i class="ti ti-chart-line"></i> Should I sell my wheat now?</button>
+        </div>
+      </div>
+
+      <div class="chat-panel">
+        <div class="chat-header">
+          <div class="chat-header-title"><i class="ti ti-message-chatbot"></i> KrishiMind Chat</div>
+          <button class="clear-btn" id="clear-btn"><i class="ti ti-trash"></i> Clear</button>
+        </div>
+        <div class="error-banner hidden" id="error-banner"></div>
+        <div class="chat-messages" id="messages">
+          <div class="empty-state" id="empty-state">
+            <div class="emoji">🌾</div>
+            <h4>Namaste! Ask me anything about your farm.</h4>
+            <p>I'll coordinate weather, crop, market, and pest agents to give you the best advice — in your language.</p>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="msg-input" placeholder="Ask your farming question here..." autocomplete="off">
+          <button class="send-btn" id="send-btn"><i class="ti ti-send"></i> Ask</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT PAGE ============ -->
+<section class="page" id="page-about">
+  <div class="about-wrap">
+    <div class="about-hero">
+      <h1>How KrishiMind works</h1>
+      <p>A multi-agent architecture purpose-built for farming decision support</p>
+    </div>
+
+    <div class="arch-diagram">
+      <div class="arch-row"><div class="arch-node accent">Farmer's Question</div></div>
+      <div class="arch-row"><i class="ti ti-arrow-down arch-arrow"></i></div>
+      <div class="arch-row"><div class="arch-node accent">Orchestrator Agent</div></div>
+      <div class="arch-row"><i class="ti ti-arrow-down arch-arrow"></i></div>
+      <div class="arch-row">
+        <div class="arch-node">Weather Agent</div>
+        <div class="arch-node">Crop Agent</div>
+        <div class="arch-node">Market Agent</div>
+        <div class="arch-node">Pest Agent</div>
+      </div>
+      <div class="arch-row"><i class="ti ti-arrow-down arch-arrow"></i></div>
+      <div class="arch-row"><div class="arch-node accent">Synthesized Response (your language)</div></div>
+    </div>
+
+    <div class="section-title" style="font-size:20px; margin-bottom:1.25rem;">Tech stack</div>
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-label">LLM</div><div class="tech-val">Groq · Llama 3.3 70B</div></div>
+      <div class="tech-item"><div class="tech-label">Weather</div><div class="tech-val">Open-Meteo API</div></div>
+      <div class="tech-item"><div class="tech-label">Backend</div><div class="tech-val">FastAPI + Python</div></div>
+      <div class="tech-item"><div class="tech-label">Crop Data</div><div class="tech-val">ICAR Knowledge Base</div></div>
+      <div class="tech-item"><div class="tech-label">Market Data</div><div class="tech-val">Agmarknet (data.gov.in)</div></div>
+      <div class="tech-item"><div class="tech-label">Languages</div><div class="tech-val">6 Indian Languages</div></div>
+    </div>
+
+    <div class="cta-banner">
+      <h2>See it in action</h2>
+      <p>Ask a real farming question and watch the agents respond.</p>
+      <button class="btn-primary" data-page="chat"><i class="ti ti-arrow-right"></i> Go to Chat</button>
+    </div>
+  </div>
+</section>
+
+<script src="dashboard.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
